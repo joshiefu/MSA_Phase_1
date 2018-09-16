@@ -35,7 +35,7 @@ constructor(props: any){
   super(props);
   this.state = {
     apiValue: 0,
-    inputString: 'Auckland',
+    inputString: '',
     searchState: false,
     searchedCity: '',
   
@@ -54,6 +54,15 @@ constructor(props: any){
  */
 
 public whenClicked() {
+  if(this.state.inputString === ''){
+    this.setState( {
+      searchState: false,
+      titleC: 'Please enter city name',
+      weatherString: '',
+    });
+    document.body.style.backgroundImage = "url('https://c.pxhere.com/photos/42/55/cold_foliage_forest_hills_landscape_mountains_nature_sky-936796.jpg!d')";
+    return;
+  }
   this.setState(
     { searchedCity: this.state.inputString, searchState: true}
   ,() => {
@@ -68,9 +77,17 @@ public whenClicked() {
 
     const cities: ICityQueryResult[] = JSON.parse(response.body);
     
-    if(cities === null){
+    if(cities.length === 0){
+      
+      this.setState( {
+        searchState: false,
+        titleC: 'City Not Found',
+        weatherString: '',
+      });
+      document.body.style.backgroundImage = "url('https://c.pxhere.com/photos/42/55/cold_foliage_forest_hills_landscape_mountains_nature_sky-936796.jpg!d')";
       return;
     }
+   
     const woeID = cities[0].woeid;
     const city = cities[0].title;
     
